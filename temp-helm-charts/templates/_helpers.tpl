@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "zerok-cli.name" -}}
+{{- define "zk-client-observability.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "zerok-cli.fullname" -}}
+{{- define "zk-client-observability.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "zerok-cli.chart" -}}
+{{- define "zk-client-observability.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "zerok-cli.labels" -}}
-helm.sh/chart: {{ include "zerok-cli.chart" . }}
-{{ include "zerok-cli.selectorLabels" . }}
+{{- define "zk-client-observability.labels" -}}
+helm.sh/chart: {{ include "zk-client-observability.chart" . }}
+{{ include "zk-client-observability.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "zerok-cli.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "zerok-cli.name" . }}
+{{- define "zk-client-observability.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "zk-client-observability.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "zerok-cli.serviceAccountName" -}}
+{{- define "zk-client-observability.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "zerok-cli.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "zk-client-observability.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
