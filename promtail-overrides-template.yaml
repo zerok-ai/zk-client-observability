@@ -25,7 +25,6 @@ daemonset:
 
     # -- List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
     controlledResources: []
-
     # Specifies which resource values should be controlled: RequestsOnly or RequestsAndLimits.
     # controlledValues: RequestsAndLimits
 
@@ -105,9 +104,6 @@ hostAliases: []
 #  - ip: 1.2.3.4
 #    hostnames:
 #      - domain.tld
-
-# -- Controls whether the pod has the `hostNetwork` flag set.
-hostNetwork: null
 
 # -- Annotations for the DaemonSet
 annotations: {}
@@ -277,7 +273,7 @@ serviceMonitor:
   # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
   # (defines `metric_relabel_configs`)
   metricRelabelings: []
-  # -- ServiceMonitor will add labels from the service to the Prometheus metric
+  # --ServiceMonitor will add labels from the service to the Prometheus metric
   # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#servicemonitorspec
   targetLabels: []
   # -- ServiceMonitor will use http by default, but you can pick https as well
@@ -411,7 +407,7 @@ config:
   # Must be reference in `config.file` to configure `clients`
   # @default -- See `values.yaml`
   clients:
-    - url: http://zk-wsp-client.zk-client.svc.cluster.local:8987/request?X-PROXY-DESTINATION=http://loki-loki-distributed-gateway.grafana-loki.svc.cluster.local/loki/api/v1/push
+    - url: http://loki-loki-distributed-gateway.grafana-loki.svc.cluster.local/loki/api/v1/push
   # -- Configures where Promtail will save it's positions file, to resume reading after restarts.
   # Must be referenced in `config.file` to configure `positions`
   positions:
@@ -465,7 +461,14 @@ config:
           - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
           - __meta_kubernetes_pod_container_name
         target_label: __path__
-    clusterId: client_cluster_id
+      - action: replace
+        target_label: cluster_id
+        replacement: client
+      - source_labels:
+          - __meta_kubernetes_namespace
+        action: keep
+        regex: zk-client
+
     # If set to true, adds an additional label for the scrape job.
     # This helps debug the Promtail config.
     addScrapeJobLabel: false
@@ -489,7 +492,7 @@ config:
       # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
       - job_name: kubernetes-pods
         pipeline_stages:
-          {{- toYaml .Values.config.snippets.pipelineStages | nindent 4 }}
+          {{- tpl (toYaml .Values.config.snippets.pipelineStages) . | nindent 4 }}
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
@@ -518,13 +521,6 @@ config:
             regex: ^;*([^;]+)(;.*)?$
             action: replace
             target_label: component
-          - action: replace
-            replacement: {{ .Values.config.snippets.clusterId }}
-            target_label: client
-          - source_labels:
-              - __meta_kubernetes_namespace
-            action: keep           
-            regex: zk-client
           {{- if .Values.config.snippets.addScrapeJobLabel }}
           - replacement: kubernetes-pods
             target_label: scrape_job

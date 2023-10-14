@@ -1,0 +1,30 @@
+# Default values for zerok-dashboard.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  dockerBase: "us-west1-docker.pkg.dev/zerok-dev/zkcloud"
+  zkcloud:
+    host: some_value
+
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+  hosts:
+    - host: monitoring.devcloud01.getanton.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: ""
+      paths:
+        - path: /v1/
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: ""
+      hosts:
+        - ""
+        - ""
+config:
+  clients:
