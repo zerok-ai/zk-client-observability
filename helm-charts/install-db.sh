@@ -20,4 +20,4 @@ done
 helm dependency update $THIS_DIR
 #helm upgrade zk-redis --install $THIS_DIR/ --create-namespace --namespace zk-client --wait
 helm upgrade zk-promtail --install $THIS_DIR/ --namespace grafana-loki --create-namespace
-#helm upgrade zk-promtail --install $THIS_DIR/ --set promtail.config.snippets.clusterId=cluster-12455 --namespace grafana-loki  --create-namespace
+#helm upgrade zk-promtail --install $THIS_DIR/ --set promtail.global.zkcloud.clusterId=cluster-12455 --namespace grafana-loki  --create-namespace

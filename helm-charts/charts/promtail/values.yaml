@@ -9,6 +9,9 @@ global:
   imageRegistry: ""
   # -- Allow parent charts to override registry credentials
   imagePullSecrets: []
+  # -- Added by us (zerok) to keep the code consistency in cli. this global section is not ours
+  zkcloud:
+    clusterId: null
 
 daemonset:
   # -- Deploys Promtail as a DaemonSet
@@ -415,7 +418,6 @@ config:
   # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
   # @default -- See `values.yaml`
   snippets:
-    clusterId: zk-client-default
     pipelineStages:
       - cri: {}
     common:
