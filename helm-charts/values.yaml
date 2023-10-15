@@ -6,6 +6,7 @@ global:
     host: redis-master.zk-client.svc.cluster.local
 
 promtail:
+  fullnameOverride: zk-promtail
   config:
     clients:
       - url: http://zk-wsp-client.zk-client.svc.cluster.local:8987/request?X-PROXY-DESTINATION=http://loki-loki-distributed-gateway.grafana-loki.svc.cluster.local/loki/api/v1/push
