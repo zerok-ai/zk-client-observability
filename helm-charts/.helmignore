@@ -37,5 +37,6 @@ NOTES.txt
 /charts/promtail/templates/service-extra.yaml
 /charts/promtail/templates/service-metrics.yaml
 /charts/promtail/templates/servicemonitor.yaml
+/charts/promtail/templates/serviceaccount.yaml
 /charts/promtail/templates/verticalpodautoscaler.yaml
 
