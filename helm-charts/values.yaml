@@ -6,7 +6,7 @@
 promtail:
   global:
     zkcloud:
-      clusterId: zk-client-default
+      clusterId:
   fullnameOverride: zk-promtail
   config:
     clients:
